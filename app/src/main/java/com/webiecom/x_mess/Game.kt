@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -16,7 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.webiecom.x_mess.ui.theme.darkText
+import com.webiecom.x_mess.ui.theme.textColor
 
 val santaClauses = listOf(
     R.drawable.sc1,
@@ -76,6 +82,29 @@ fun getSantas(idx: Int): List<Int> {
     return listOf(0)
 }
 
+fun getCorrectSantaAmount(idx: Int): Int {
+    return getSantas(idx).count {it == idx}
+}
+
+fun getScoreText(incorrectSantas: Int): String {
+    when(incorrectSantas) {
+        0 -> return "Perfect score."
+        1 -> return "One mistake."
+        2 -> return "Two mistakes."
+        3 -> return "Three mistakes? Too hard?"
+        4 -> return "Four. Four incorrect santas..."
+        5 -> return "So many? Five you got wrong."
+        6 -> return "Impressive six were incorrect."
+        7 -> return "How can you get seven wrong?"
+        8 -> return "Eight? Really eight wrong?"
+        9 -> return "Nine worng. No comment."
+        10 -> return "Did you even look? Ten wrong."
+        in 11..20 -> return "You got ... $incorrectSantas "
+        in 21..24 -> return "Mighty. Truly mighty $incorrectSantas wrong."
+        else -> return "Not possible."
+    }
+}
+
 @Composable
 fun Game(idx: Int) {
     Image(
@@ -86,25 +115,51 @@ fun Game(idx: Int) {
     Spacer(Modifier.height(46.dp))
 
     val santas = getSantas(idx)
-    Column {
-        santas.chunked(4).forEach { rowItems ->
-            Row(Modifier.padding(bottom = 14.dp)) {
-                rowItems.forEach { santa ->
-                    var imageId by remember { mutableIntStateOf(santaClauses[santa]) }
-                    var clicked by remember { mutableStateOf(false) }
+    var correctSantas by remember { mutableIntStateOf(0) }
+    var incorrectSantas by remember { mutableIntStateOf(0)}
 
-                    Image(
-                        painter = painterResource(imageId),
-                        contentDescription = "Santa Claus",
-                        modifier = Modifier
-                            .size(75.dp)
-                            .clickable(enabled = !clicked) {
-                                imageId = if (idx == santa) R.drawable.check else R.drawable.cross
-                                clicked = true
-                            }
-                    )
+    // game
+    if (correctSantas < getCorrectSantaAmount(idx)) {
+        Column {
+            santas.chunked(4).forEach { rowItems ->
+                Row(Modifier.padding(bottom = 14.dp)) {
+                    rowItems.forEach { santa ->
+                        var imageId by remember { mutableIntStateOf(santaClauses[santa]) }
+                        var clicked by remember { mutableStateOf(false) }
+
+                        Image(
+                            painter = painterResource(imageId),
+                            contentDescription = "Santa Claus",
+                            modifier = Modifier
+                                .size(75.dp)
+                                .clickable(enabled = !clicked) {
+                                    val correctSanta = idx == santa
+                                    imageId = if (correctSanta) R.drawable.check else R.drawable.cross
+                                    clicked = true
+                                    if (correctSanta) correctSantas++ else incorrectSantas++
+                                }
+                        )
+                    }
                 }
             }
         }
+    } else {    // game completed
+        Text(
+            text = "You found all Santas. Congratulations.",
+            fontSize = 30.sp,
+            lineHeight = 30.sp,
+            textAlign = TextAlign.Center,
+            color = darkText,
+            fontWeight = FontWeight.Black
+        )
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = "Your score:\n" + getScoreText(incorrectSantas),
+            fontSize = 25.sp,
+            lineHeight = 25.sp,
+            textAlign = TextAlign.Center,
+            color = textColor,
+            fontWeight = FontWeight.Black
+        )
     }
 }
