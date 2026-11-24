@@ -29,6 +29,6 @@ fun AdventsPager() {
 
     LaunchedEffect(Unit) {
         // 4. Scroll to the specific page/index
-        pagerState.animateScrollToPage(day-1)
+        //pagerState.animateScrollToPage(day-1)
     }
 }
