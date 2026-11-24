@@ -1,6 +1,5 @@
 package com.webiecom.x_mess
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,33 +40,6 @@ fun getDaySuffix(day: Int): String {
         else -> "th"
     }
 }
-
-val santaClauses = listOf(
-    R.drawable.sc1,
-    R.drawable.sc2,
-    R.drawable.sc3,
-    R.drawable.sc4,
-    R.drawable.sc5,
-    R.drawable.sc6,
-    R.drawable.sc7,
-    R.drawable.sc8,
-    R.drawable.sc9,
-    R.drawable.sc10,
-    R.drawable.sc11,
-    R.drawable.sc12,
-    R.drawable.sc13,
-    R.drawable.sc14,
-    R.drawable.sc15,
-    R.drawable.sc16,
-    R.drawable.sc17,
-    R.drawable.sc18,
-    R.drawable.sc19,
-    R.drawable.sc20,
-    R.drawable.sc21,
-    R.drawable.sc22,
-    R.drawable.sc23,
-    R.drawable.sc24,
-)
 
 @Composable
 fun DayPage(idx: Int) {
@@ -167,13 +138,8 @@ fun DayPage(idx: Int) {
                 color = White,
                 fontWeight = FontWeight.Black
             )
-            Image(
-                painter = painterResource(santaClauses[idx]),
-                contentDescription = "Santa Claus",
-                modifier = Modifier.size(100.dp)
-            )
-            Spacer(Modifier.height(46.dp))
-            Game()
+
+            Game(idx)
         }
     }
 }

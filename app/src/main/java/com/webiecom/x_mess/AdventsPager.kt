@@ -16,7 +16,7 @@ fun AdventsPager() {
     })
 
     HorizontalPager(state = pagerState) { idx ->
-        DayPage(idx,)
+        DayPage(idx)
     }
 
     // jump to current date
