@@ -24,7 +24,7 @@ fun AdventsPager() {
     val currentDate = LocalDate.now()
     var day = currentDate.dayOfMonth
     val month = currentDate.monthValue
-    day = if (month != 12) 1
+    day = if (month != 11) 1    // TODO: debug -> change back to 12
     else minOf(day, 24)
 
     LaunchedEffect(Unit) {

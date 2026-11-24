@@ -50,4 +50,5 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.material)
+    implementation(libs.datastore.preferences)
 }

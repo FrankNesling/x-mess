@@ -13,20 +13,23 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.graphics.Color.Companion.Yellow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.webiecom.x_mess.ui.theme.DataStorage
 import com.webiecom.x_mess.ui.theme.darkText
 import com.webiecom.x_mess.ui.theme.snowWhite
 import com.webiecom.x_mess.ui.theme.textColor
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 fun getDaySuffix(day: Int): String {
@@ -58,23 +61,36 @@ fun DayPage(idx: Int) {
         )
     }
 
-    // open box
+    // data storage - already opened page
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val dataStorage = remember { DataStorage(context) }
+    val hasBeenOpened = dataStorage.getOpened(idx)
+        .collectAsState(false)  // initial value until loaded from data storage
+        .value
+
+
+    // open box functionality
     val openBox: () -> Unit = {
         val currentDate = LocalDate.now()
         val day = currentDate.dayOfMonth
         val month = currentDate.monthValue
 
         // check for correct day
-        if (idx + 1 <= day && month == 12) {
-            openAlert.value = false
+        if (idx + 1 <= day && month == 11) {    // TODO: debug -> change back to 12
+            scope.launch {
+                try {
+                    dataStorage.saveOpened(idx, true)
+                } catch (e: Exception) {
+                    println("Error saving data: ${e.message}")
+                }
+            }
         } else {
             openAlert.value = true
         }
 
 
     }
-
-    val hasBeenOpened = false
 
     // UI
     Column(
@@ -102,21 +118,13 @@ fun DayPage(idx: Int) {
         } // opened
         else {
             // Title
-            Spacer(Modifier.height(96.dp))
-            Text(
-                text = "" + idx,
-                fontSize = 50.sp,
-                textAlign = TextAlign.Center,
-                color = Green,
-                lineHeight =  50.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Spacer(Modifier.height(128.dp))
             Text(
                 text = "${idx+1}${getDaySuffix(idx+1)} December",
-                fontSize = 25.sp,
-                lineHeight = 25.sp,
+                fontSize = 50.sp,
+                lineHeight = 50.sp,
                 textAlign = TextAlign.Center,
-                color = Green,
+                color = darkText,
                 fontWeight = FontWeight.Bold
             )
 
