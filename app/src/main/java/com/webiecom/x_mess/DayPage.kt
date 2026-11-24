@@ -24,6 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.webiecom.x_mess.ui.theme.darkText
+import com.webiecom.x_mess.ui.theme.snowWhite
+import com.webiecom.x_mess.ui.theme.textColor
 import java.time.LocalDate
 
 fun getDaySuffix(day: Int): String {
@@ -48,7 +51,10 @@ fun DayPage(idx: Int) {
                 Button(onClick = { openAlert.value = false }) {
                     Text("OK")
                 }
-            }
+            },
+            containerColor = snowWhite,
+            titleContentColor = darkText,
+            textContentColor = darkText
         )
     }
 
@@ -81,7 +87,7 @@ fun DayPage(idx: Int) {
             Box(
                 modifier = Modifier
                     .size(200.dp)
-                    .background(Yellow)
+                    .background(snowWhite)
                     .padding(16.dp)
                     .clickable(onClick = openBox),
                 contentAlignment = Alignment.Center
@@ -89,7 +95,7 @@ fun DayPage(idx: Int) {
                 Text(
                     text = (idx+1).toString(),
                     fontSize = 50.sp,
-                    color = White
+                    color = textColor
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
