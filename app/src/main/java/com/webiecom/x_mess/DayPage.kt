@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.webiecom.x_mess.ui.theme.DataStorage
 import com.webiecom.x_mess.ui.theme.darkText
 import com.webiecom.x_mess.ui.theme.snowWhite
 import com.webiecom.x_mess.ui.theme.textColor

@@ -10,7 +10,6 @@ val darkText = Color(0xFF031067)
 
 /*
 TODOs
-- save and load scores to data storage
 - sound and music
 - webpage for download
 - remove debug -> 11 to 12

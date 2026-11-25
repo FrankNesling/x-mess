@@ -10,13 +10,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webiecom.x_mess.ui.theme.darkText
 import com.webiecom.x_mess.ui.theme.textColor
+import kotlinx.coroutines.launch
 
 val santaClauses = listOf(
     R.drawable.sc1,
@@ -108,6 +111,16 @@ fun getScoreText(incorrectSantas: Int): String {
 
 @Composable
 fun Game(idx: Int) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val dataStorage = remember { DataStorage(context) }
+
+    // previous scores
+    val wrongSantasScore = dataStorage.getScore(idx)
+        .collectAsState(null)  // initial value until loaded from data storage
+        .value
+
+
     Image(
         painter = painterResource(santaClauses[idx]),
         contentDescription = "Santa Claus",
@@ -117,10 +130,10 @@ fun Game(idx: Int) {
 
     val santas = getSantas(idx)
     var correctSantas by remember { mutableIntStateOf(0) }
-    var incorrectSantas by remember { mutableIntStateOf(0)}
+    var incorrectSantas by remember { mutableIntStateOf(wrongSantasScore ?: 0)}
 
     // game
-    if (correctSantas < getCorrectSantaAmount(idx)) {
+    if (correctSantas < getCorrectSantaAmount(idx) && wrongSantasScore == null) {
         Column {
             santas.chunked(4).forEach { rowItems ->
                 Row(Modifier.padding(bottom = 14.dp)) {
@@ -138,6 +151,11 @@ fun Game(idx: Int) {
                                     imageId = if (correctSanta) R.drawable.check else R.drawable.cross
                                     clicked = true
                                     if (correctSanta) correctSantas++ else incorrectSantas++
+                                    if (correctSantas == getCorrectSantaAmount(idx)) {
+                                        scope.launch {
+                                            dataStorage.saveScore(idx, incorrectSantas)
+                                        }
+                                    }
                                 }
                         )
                     }
@@ -145,10 +163,6 @@ fun Game(idx: Int) {
             }
         }
     } else {    // game completed
-        LaunchedEffect(correctSantas == getCorrectSantaAmount(idx)) {
-
-        }
-
         Text(
             text = "You found all Santas. Congratulations.",
             fontSize = 30.sp,
@@ -159,7 +173,7 @@ fun Game(idx: Int) {
         )
         Spacer(Modifier.height(24.dp))
         Text(
-            text = "Your score:\n" + getScoreText(incorrectSantas),
+            text = "Your score:\n" + getScoreText(wrongSantasScore ?: incorrectSantas),
             fontSize = 25.sp,
             lineHeight = 25.sp,
             textAlign = TextAlign.Center,
