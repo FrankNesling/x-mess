@@ -23,11 +23,11 @@ fun AdventsPager() {
     val currentDate = LocalDate.now()
     var day = currentDate.dayOfMonth
     val month = currentDate.monthValue
-    day = if (month != 11) 1    // TODO: debug -> change back to 12
+    day = if (month != 12) 1
     else minOf(day, 24)
 
     LaunchedEffect(Unit) {
-        // 4. Scroll to the specific page/index
-        //pagerState.animateScrollToPage(day-1)
+        // Scroll to the specific page/index
+        pagerState.animateScrollToPage(day-1)
     }
 }

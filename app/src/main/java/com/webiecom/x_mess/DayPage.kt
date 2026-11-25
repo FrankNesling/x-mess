@@ -82,7 +82,7 @@ fun DayPage(idx: Int) {
         val month = currentDate.monthValue
 
         // check for correct day
-        if (idx + 1 <= day && month == 11) {    // TODO: debug -> change back to 12
+        if (idx + 1 <= day && month == 12) {
             pool.play(openSound, 1f, 1f, 1, 0, 1f)
             scope.launch {
                 try {
