@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -53,30 +54,30 @@ val santaClauses = listOf(
 
 fun getSantas(idx: Int): List<Int> {
     when (idx) {
-        0 -> return listOf(0, 2, 2, 22, 17, 23, 5, 0, 4, 0, 14, 7, 16, 3, 7, 9)
-        1 -> return listOf(5, 23, 1, 17, 4, 1, 4, 2, 8, 10, 11, 19, 20, 4, 1, 3)
-        2 -> return listOf(22, 10, 17, 17, 2, 23, 6, 9, 16, 2, 11, 0, 3, 23, 14, 7)
-        3 -> return listOf(14, 0, 23, 3, 3, 11, 10, 2, 11, 4, 3, 19, 20, 19, 7, 1)
-        4 -> return listOf(5, 3, 10, 4, 15, 22, 4, 7, 12, 21, 7, 8, 4, 17, 9, 10)
-        5 -> return listOf(19, 14, 7, 10, 11, 5, 5, 19, 20, 5, 4, 1, 22, 16, 5, 3)
-        6 -> return listOf(19, 16, 6, 7, 0, 20, 14, 6, 4, 13, 23, 0, 6, 13, 18, 7)
-        7 -> return listOf(12, 6, 16, 6, 18, 20, 7, 2, 0, 20, 16, 9, 11, 1, 12, 15)
-        8 -> return listOf(8, 5, 21, 3, 16, 20, 22, 8, 8, 12, 20, 21, 13, 2, 10, 23)
-        9 -> return listOf(11, 1, 11, 21, 15, 9, 5, 13, 2, 9, 13, 9, 20, 17, 8, 10)
-        10 -> return listOf(15, 8, 16, 19, 20, 15, 10, 10, 10, 23, 11, 4, 0, 10, 20, 18)
-        11 -> return listOf(9, 4, 8, 11, 13, 11, 4, 10, 23, 21, 16, 6, 14, 22, 9, 11)
-        12 -> return listOf(10, 12, 13, 12, 19, 1, 3, 20, 11, 22, 12, 16, 2, 0, 21, 12)
-        13 -> return listOf(0, 20, 23, 16, 21, 12, 3, 11, 13, 17, 22, 16, 13, 9, 13, 8)
-        14 -> return listOf(4, 20, 0, 3, 20, 9, 14, 2, 10, 17, 7, 8, 14, 4, 5, 15)
-        15 -> return listOf(1, 19, 4, 4, 23, 14, 15, 0, 1, 16, 22, 19, 6, 15, 12, 15)
-        16 -> return listOf(17, 12, 15, 11, 23, 1, 12, 13, 16, 5, 16, 22, 10, 9, 16, 17)
-        17 -> return listOf(23, 14, 3, 10, 21, 2, 4, 17, 17, 5, 4, 11, 10, 0, 23, 22)
-        18 -> return listOf(17, 18, 9, 18, 16, 18, 17, 8, 21, 22, 23, 9, 18, 6, 14, 15)
-        19 -> return listOf(5, 17, 9, 7, 22, 0, 22, 2, 19, 16, 7, 6, 16, 2, 19, 21)
-        20 -> return listOf(7, 11, 20, 5, 20, 4, 16, 19, 20, 4, 1, 11, 10, 7, 18, 20)
-        21 -> return listOf(13, 6, 2, 22, 11, 15, 21, 13, 21, 18, 0, 22, 21, 1, 10, 8)
-        22 -> return listOf(14, 22, 17, 15, 22, 12, 3, 23, 10, 22, 6, 15, 1, 16, 22, 9)
-        23 -> return listOf(23, 23, 23, 14, 23, 14, 23, 23, 23, 23, 14, 23, 23, 23, 23, 23) // perfect
+        0 -> return listOf(5, 8, 0, 0, 0, 5, 7, 0, 5, 2, 11, 0, 18, 8, 0, 5)
+        1 -> return listOf(1, 0, 17, 19, 1, 18, 9, 19, 1, 21, 20, 2, 19, 21, 17, 1)
+        2 -> return listOf(18, 15, 2, 3, 5, 21, 15, 2, 13, 6, 2, 2, 2, 13, 0, 13)
+        3 -> return listOf(0, 3, 5, 22, 3, 15, 3, 19, 22, 7, 6, 3, 10, 22, 3, 10)
+        4 -> return listOf( 20, 13, 8, 0, 4, 22, 4, 5, 4, 13, 10, 23, 23, 4, 4, 20)
+        5 -> return listOf(5, 21, 16, 0, 5, 5, 0, 23, 11, 16, 0, 5, 21, 6, 7, 5)
+        6 -> return listOf(9, 11, 11, 6, 3, 2, 16, 6, 17, 11, 6, 10, 11, 17, 6, 10)
+        7 -> return listOf(3, 22, 4, 12, 7, 12, 7, 22, 7, 2, 5, 0, 22, 7, 0, 7)
+        8 -> return listOf(23, 8, 8, 16, 20, 8, 14, 19, 8, 6, 20, 4, 8, 16, 23, 16)
+        9 -> return listOf(12, 20, 9, 15, 9, 4, 12, 6, 9, 20, 15, 12, 20, 15, 12, 9)
+        10 -> return listOf(10, 11, 3, 13, 16, 10, 22, 17, 10, 13, 10, 11, 16, 17, 11, 22)
+        11 -> return listOf(5, 16, 11, 23, 21, 6, 11, 5, 11, 11, 14, 16, 5, 16, 11, 19)
+        12 -> return listOf(22, 12, 15, 7, 20, 12, 9, 22, 9, 20, 12, 15, 7, 9, 12, 12)
+        13 -> return listOf(13, 17, 15, 13, 13, 14, 21, 6, 3, 2, 15, 13, 2, 13, 2, 6)
+        14 -> return listOf(23, 13, 14, 14, 16, 23, 17, 14, 14, 16, 23, 14, 4, 13, 14, 16)
+        15 -> return listOf(13, 15, 20, 9, 4, 15, 18, 15, 2, 9, 20, 15, 21, 9, 15, 15)
+        16 -> return listOf(14, 16, 4, 16, 23, 16, 20, 16, 16, 13, 14, 23, 23, 14, 16, 4)
+        17 -> return listOf(13, 17, 1, 21, 17, 17, 19, 17, 6, 14, 17, 17, 21, 17, 20, 19)
+        18 -> return listOf(18, 18, 21, 1, 13, 18, 21, 21, 18, 19, 13, 21, 18, 19, 18, 18)
+        19 -> return listOf(1, 19, 19, 8, 18, 19, 17, 19, 19, 21, 14, 19, 19, 20, 19, 8)
+        20 -> return listOf(1, 12, 20, 17, 20, 18, 21, 20, 12, 1, 9, 20, 17, 21, 20, 1)
+        21 -> return listOf(20, 21, 1, 21, 17, 18, 17, 5, 21, 2, 21, 20, 18, 5, 18, 17)
+        22 -> return listOf(22, 0, 7, 22, 12, 22, 22, 10, 17, 10, 22, 13, 22, 0, 10, 22)
+        23 -> return listOf(23, 23, 23, 14, 23, 14, 11, 23, 23, 23, 14, 23, 23, 11, 23, 11)
     }
 
     return listOf(0)
@@ -97,7 +98,7 @@ fun getScoreText(incorrectSantas: Int): String {
         6 -> return "Impressive six were incorrect."
         7 -> return "How can you get seven wrong?"
         8 -> return "Eight? Really eight wrong?"
-        9 -> return "Nine worng. No comment."
+        9 -> return "Nine wrong. No comment."
         10 -> return "Did you even look? Ten wrong."
         in 11..20 -> return "You got ... $incorrectSantas "
         in 21..24 -> return "Mighty. Truly mighty $incorrectSantas wrong."
@@ -144,6 +145,10 @@ fun Game(idx: Int) {
             }
         }
     } else {    // game completed
+        LaunchedEffect(correctSantas == getCorrectSantaAmount(idx)) {
+
+        }
+
         Text(
             text = "You found all Santas. Congratulations.",
             fontSize = 30.sp,
