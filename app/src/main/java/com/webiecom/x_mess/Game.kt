@@ -1,5 +1,6 @@
 package com.webiecom.x_mess
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.webiecom.x_mess.ui.theme.darkText
+import com.webiecom.x_mess.ui.theme.snowWhite
 import com.webiecom.x_mess.ui.theme.textColor
 import kotlinx.coroutines.launch
 
@@ -103,7 +108,7 @@ fun getScoreText(incorrectSantas: Int): String {
         8 -> return "Eight? Really eight wrong?"
         9 -> return "Nine wrong. No comment."
         10 -> return "Did you even look? Ten wrong."
-        in 11..20 -> return "You got ... $incorrectSantas "
+        in 11..20 -> return "You got ... $incorrectSantas. :O"
         in 21..24 -> return "Mighty. Truly mighty $incorrectSantas wrong."
         else -> return "Not possible."
     }
@@ -180,5 +185,20 @@ fun Game(idx: Int) {
             color = textColor,
             fontWeight = FontWeight.Black
         )
+        Spacer(Modifier.height(72.dp))
+        Button(onClick = {
+            val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_TEXT, "For December ${idx + 1}${getDaySuffix(idx + 1)}, I got:\n${getScoreText(wrongSantasScore ?: incorrectSantas)} \n\nWhat about you?")
+                type = "text/plain"
+            }
+            context.startActivity(Intent.createChooser(sendIntent, null))
+        }) {
+            Text(
+                text = "Share",
+                fontSize = 22.sp,
+                color = snowWhite,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
     }
 }
