@@ -1,5 +1,6 @@
 package com.webiecom.x_mess
 
+import android.media.SoundPool
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,6 +70,10 @@ fun DayPage(idx: Int) {
         .collectAsState(false)  // initial value until loaded from data storage
         .value
 
+    // sound
+    val pool = remember { SoundPool.Builder().setMaxStreams(2).build() }
+    val openSound = remember { pool.load(context, R.raw.opendoor, 1) }
+    DisposableEffect(Unit) { onDispose { pool.release() } }
 
     // open box functionality
     val openBox: () -> Unit = {
@@ -77,6 +83,7 @@ fun DayPage(idx: Int) {
 
         // check for correct day
         if (idx + 1 <= day && month == 11) {    // TODO: debug -> change back to 12
+            pool.play(openSound, 1f, 1f, 1, 0, 1f)
             scope.launch {
                 try {
                     dataStorage.saveOpened(idx, true)

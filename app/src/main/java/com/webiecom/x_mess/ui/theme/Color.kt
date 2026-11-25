@@ -10,9 +10,7 @@ val darkText = Color(0xFF031067)
 
 /*
 TODOs
-- sound and music
 - webpage for download
 - remove debug -> 11 to 12
-- share
 
  */

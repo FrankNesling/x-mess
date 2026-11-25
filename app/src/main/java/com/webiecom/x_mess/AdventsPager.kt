@@ -20,7 +20,6 @@ fun AdventsPager() {
     }
 
     // jump to current date
-
     val currentDate = LocalDate.now()
     var day = currentDate.dayOfMonth
     val month = currentDate.monthValue

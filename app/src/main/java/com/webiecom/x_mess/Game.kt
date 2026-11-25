@@ -1,6 +1,7 @@
 package com.webiecom.x_mess
 
 import android.content.Intent
+import android.media.SoundPool
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -9,11 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -120,6 +120,12 @@ fun Game(idx: Int) {
     val scope = rememberCoroutineScope()
     val dataStorage = remember { DataStorage(context) }
 
+    // sound
+    val pool = remember { SoundPool.Builder().setMaxStreams(2).build() }
+    val correctSound = remember { pool.load(context, R.raw.correct, 1) }
+    val incorrectSound = remember { pool.load(context, R.raw.incorrect, 1) }
+    DisposableEffect(Unit) { onDispose { pool.release() } }
+
     // previous scores
     val wrongSantasScore = dataStorage.getScore(idx)
         .collectAsState(null)  // initial value until loaded from data storage
@@ -155,7 +161,17 @@ fun Game(idx: Int) {
                                     val correctSanta = idx == santa
                                     imageId = if (correctSanta) R.drawable.check else R.drawable.cross
                                     clicked = true
-                                    if (correctSanta) correctSantas++ else incorrectSantas++
+
+                                    // update
+                                    if (correctSanta) {
+                                        correctSantas++
+                                        pool.play(correctSound, 1f, 1f, 1, 0, 1f)
+                                    } else {
+                                        incorrectSantas++
+                                        pool.play(incorrectSound, 1f, 1f, 1, 0, 1f)
+                                    }
+
+                                    // save data
                                     if (correctSantas == getCorrectSantaAmount(idx)) {
                                         scope.launch {
                                             dataStorage.saveScore(idx, incorrectSantas)
